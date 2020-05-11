@@ -127,7 +127,7 @@ def run_episode_mean_reward_experiment_ddpg(game_name, solved_score, policy, par
     action_noise = OrnsteinUhlenbeckActionNoise(mean=np.zeros(n_actions), sigma=float(0.5) * np.ones(n_actions))
 
     # model defination
-    model = DDPG(policy, env, action_noise=action_noise ,verbose=1, gamma=parameter_dict["gamma"]
+    model = DDPG(policy, env, action_noise=None ,verbose=1, gamma=parameter_dict["gamma"]
                                         , nb_train_steps=parameter_dict["nb_train_steps"]
                                         , nb_rollout_steps=parameter_dict["nb_rollout_steps"]
                                         , nb_eval_steps=parameter_dict["nb_eval_steps"]

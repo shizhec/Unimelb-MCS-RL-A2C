@@ -18,7 +18,8 @@ def main():
 
 
     # run_a2c_learning_rate_exp('CartPole-v1', 195, MlpPolicy)
-    run_ddpg_buffersize_exp('LunarLanderContinuous-v2', 200.0, ddpg_mlpPolicy)
+    # run_ddpg_buffersize_exp('LunarLanderContinuous-v2', 200.0, ddpg_mlpPolicy)
+    run_a2c_ddpg_comparesion('LunarLanderContinuous-v2', 200.0, MlpPolicy, ddpg_mlpPolicy)
 
 
 
@@ -65,6 +66,27 @@ def run_ddpg_buffersize_exp(game, pass_score, policy):
     plt.ylabel('mean_reward')
     plt.show()
 
+def run_a2c_ddpg_comparesion(game, pass_score, a2c_policy, ddpg_policy):
+    best_reward_mean_a2c = []
+    best_reward_mean_ddpg = []
+
+    ddpg_para_dict = experiments.get_ddpg_para_dict(gamma=0.99, nb_train_steps=50, nb_rollout_steps=100, 
+                                        nb_eval_steps=100, batch_size=128, actor_lr=0.0001, critic_lr=0.001, buffer_size=40000, reward_scale=1.0)
+    a2c_para_dict = experiments.get_a2c_para_dict(gamma=0.99, n_step=5, learning_rate=0.0004 , alpha=0.99, epsilon=1e-05)
+    for i in range(10):
+        print('\rrunning experiment {}'.format(i))
+        ddpg_rewards = experiments.run_episode_mean_reward_experiment_ddpg(game, pass_score, ddpg_policy, ddpg_para_dict, 
+                                                                episode=1000, timesteps=1e7, render=False, atari_game=False)
+        a2c_rewards = experiments.run_episode_mean_reward_experiment_a2c(game, pass_score, a2c_policy, a2c_para_dict, episode=1000, timesteps=1e7, render=False, atari_game=False)
+
+        best_reward_mean_a2c.append(np.max(a2c_rewards))
+        best_reward_mean_ddpg.append(np.max(ddpg_rewards))
+    
+    print(best_reward_mean_a2c)
+    print("best_a2c_mean "+str(np.mean(best_reward_mean_a2c)))
+
+    print(best_reward_mean_ddpg)
+    print("best_ddpg_mean "+str(np.mean(best_reward_mean_ddpg)))
 
 if __name__ == "__main__":
     main()
