@@ -87,7 +87,7 @@ def run_episode_mean_reward_experiment_a2c(game_name, solved_score, policy, para
     # plt.xlabel('# of episode')
     # plt.title('a2c '+game_name)
     # plt.show()
-    return np.max(episode_rewards)
+    return episode_rewards
 
             
 def run_experiments_moniter_a2c(game_name, policy, parameter_dict, timesteps=25000, atari_game=False):
@@ -157,15 +157,19 @@ def run_episode_mean_reward_experiment_ddpg(game_name, solved_score, policy, par
             reward_sum += reward
         episode_rewards.append(reward_sum)
 
-        print('\rEpisode {}, Episode Score: {}, Max: {:.2f}, Min: {:.2f}, total_steps: {:.2f}'\
-                  .format(i, reward_sum, np.max(episode_rewards), np.min(episode_rewards), total_timesteps), end="\n")
+        if i % 100 == 0:
+            print("episode: "+str(i))
+        
+        # print('\rEpisode {}, Episode Score: {}, Max: {:.2f}, Min: {:.2f}, total_steps: {:.2f}'\
+        #           .format(i, reward_sum, np.max(episode_rewards), np.min(episode_rewards), total_timesteps), end="\n")
 
         if reward_sum >= solved_score:
             break
-    print('\rAverage Rewards {}'.format(np.mean(episode_rewards)))
-    plt.plot(np.arange(1, len(episode_rewards)+1), episode_rewards)
-    plt.ylabel('episode reward')
-    plt.xlabel('# of episode')
-    plt.title('ddpg '+game_name)
-    plt.show()
+    # print('\rAverage Rewards {}'.format(np.mean(episode_rewards)))
+    # plt.plot(np.arange(1, len(episode_rewards)+1), episode_rewards)
+    # plt.ylabel('episode reward')
+    # plt.xlabel('# of episode')
+    # plt.title('ddpg '+game_name)
+    # plt.show()
+    return episode_rewards
  
